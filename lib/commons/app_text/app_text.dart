@@ -47,6 +47,11 @@ class AppText {
         fontSize: 16, fontWeight: FontWeight.w600);
   }
 
+  static TextStyle titleLarge({Color? color}) {
+    return _style(color ?? Colors.black,
+        fontSize: 20, fontWeight: FontWeight.w700);
+  }
+
   static TextStyle bodyMedium({Color? color}) {
     return _style(color ?? Colors.black, fontSize: 14);
   }

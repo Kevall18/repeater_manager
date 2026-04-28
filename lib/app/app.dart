@@ -3,12 +3,57 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../core/cubits/connectivity_cubit.dart';
 import '../core/cubits/connectivity_state.dart';
+import '../core/cubits/theme_cubit.dart';
+import '../modules/auth/bloc/auth_cubit.dart';
+import '../modules/auth/repository/auth_repository.dart';
+import '../modules/auth/repository/user_repository.dart';
 import '../modules/home/repository/home_repository.dart';
 import 'app_router.dart';
 import 'app_theme.dart';
 
-class App extends StatelessWidget {
-  const App({super.key});
+class App extends StatefulWidget {
+  const App({
+    super.key,
+    this.useTestAuth = false,
+  });
+
+  final bool useTestAuth;
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  AuthRepository? _authRepository;
+  UserRepository? _userRepository;
+  late final AuthCubit _authCubit;
+  late final ThemeCubit _themeCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _themeCubit = ThemeCubit();
+    if (widget.useTestAuth) {
+      _authCubit = AuthCubit.test();
+    } else {
+      final authRepository = AuthRepository();
+      final userRepository = UserRepository();
+      _authRepository = authRepository;
+      _userRepository = userRepository;
+      _authCubit = AuthCubit(
+        authRepository: authRepository,
+        userRepository: userRepository,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _authCubit.close();
+    _themeCubit.close();
+    _authRepository?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +62,19 @@ class App extends StatelessWidget {
         RepositoryProvider<HomeRepository>(
           create: (_) => const HomeRepository(),
         ),
+        if (_authRepository case final authRepository?)
+          RepositoryProvider<AuthRepository>.value(value: authRepository),
+        if (_userRepository case final userRepository?)
+          RepositoryProvider<UserRepository>.value(value: userRepository),
       ],
-      child: BlocProvider<ConnectivityCubit>(
-        create: (_) => ConnectivityCubit(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<ConnectivityCubit>(
+            create: (_) => ConnectivityCubit(),
+          ),
+          BlocProvider<ThemeCubit>.value(value: _themeCubit),
+          BlocProvider<AuthCubit>.value(value: _authCubit),
+        ],
         child: Builder(
           builder: (context) {
             return MaterialApp.router(
@@ -27,7 +82,9 @@ class App extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               theme: AppTheme.light(),
               darkTheme: AppTheme.dark(),
+              themeMode: context.watch<ThemeCubit>().state,
               routerConfig: AppRouter.createRouter(
+                authCubit: context.read<AuthCubit>(),
                 homeRepository: context.read<HomeRepository>(),
               ),
               builder: (context, child) {

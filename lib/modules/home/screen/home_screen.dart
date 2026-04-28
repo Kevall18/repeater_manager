@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../commons/app_scaffold/app_scaffold.dart';
 import '../../../commons/app_text/app_text.dart';
 import '../../../commons/responsive/app_responsive_page.dart';
+import '../../../modules/auth/bloc/auth_cubit.dart';
 import '../../../core/cubits/connectivity_cubit.dart';
 import '../../../core/cubits/connectivity_state.dart';
 import '../bloc/home_cubit.dart';
@@ -17,6 +18,13 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppScaffold(
       title: 'Repeater Manager',
+      actions: [
+        IconButton(
+          tooltip: 'Logout',
+          onPressed: () => context.read<AuthCubit>().signOut(),
+          icon: const Icon(Icons.logout_rounded),
+        ),
+      ],
       body: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
           return AppResponsivePage(
@@ -75,6 +83,12 @@ class HomeScreen extends StatelessWidget {
                     );
                   },
                 ),
+                const SizedBox(height: 16),
+                ElevatedButton.icon(
+                  onPressed: () => context.read<AuthCubit>().signOut(),
+                  icon: const Icon(Icons.logout_rounded),
+                  label: const Text('Sign Out'),
+                ),
               ],
             )
           : Row(
@@ -127,6 +141,12 @@ class HomeScreen extends StatelessWidget {
                                 : Icons.wifi_off_rounded,
                           );
                         },
+                      ),
+                      const SizedBox(height: 12),
+                      ElevatedButton.icon(
+                        onPressed: () => context.read<AuthCubit>().signOut(),
+                        icon: const Icon(Icons.logout_rounded),
+                        label: const Text('Sign Out'),
                       ),
                     ],
                   ),

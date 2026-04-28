@@ -7,11 +7,13 @@ Web-first Flutter foundation for Firebase-backed module development.
 This project is now structured for:
 
 - Firestore-based CRUD and query access through a shared base repository.
+- Firebase Auth with shared web persistence so login survives new tabs and logout syncs across tabs.
 - Bloc/Cubit state management with `equatable` states and `copyWith` updates.
 - Centralized theme, color tokens, and text styles so visual changes happen in one place.
 - Responsive layouts for mobile, tablet, and desktop/web through a shared `LayoutBuilder` wrapper.
 - `go_router` as the direct routing layer with centralized route constants.
 - Common scaffold, app bar, text field, dropdown, and date picker widgets.
+- Shared animation and validation helpers for auth forms and other future modules.
 - Internet/offline handling at the app scaffold level for web use.
 - Module-based structure so future features stay isolated and predictable.
 
@@ -36,12 +38,16 @@ lib/
 │   ├── app_routes.dart
 │   └── app_theme.dart
 ├── commons/
+│   ├── animations/
+│   │   └── app_animated_entry.dart
 │   ├── app_bar/
 │   │   └── app_app_bar.dart
 │   ├── app_scaffold/
 │   │   └── app_scaffold.dart
 │   ├── app_text/
 │   │   └── app_text.dart
+│   ├── validation/
+│   │   └── app_validators.dart
 │   ├── network/
 │   │   └── no_internet_view.dart
 │   ├── responsive/
@@ -65,6 +71,22 @@ lib/
 │       ├── app_colors.dart
 │       └── app_theme_colors.dart
 └── modules/
+    └── auth/
+        ├── bloc/
+        │   ├── auth_cubit.dart
+        │   └── auth_state.dart
+        ├── models/
+        │   └── app_user.dart
+        ├── repository/
+        │   ├── auth_repository.dart
+        │   └── user_repository.dart
+        ├── screen/
+        │   ├── login_screen.dart
+        │   └── signup_screen.dart
+        └── widgets/
+            ├── auth_form_shell.dart
+            ├── auth_page_header.dart
+            └── auth_text_field.dart
     └── home/
         ├── bloc/
         │   ├── home_cubit.dart
@@ -101,6 +123,15 @@ lib/
 - Keep Firestore access inside repositories, not in screens.
 - Avoid passing Firestore data between pages as navigation payloads when the page can reload itself.
 
+### Auth
+
+- Keep auth flow in `lib/modules/auth`.
+- Use `AuthCubit` for sign in, sign up, sign out, and current-user state.
+- Persist web auth in `LOCAL` mode so another tab stays signed in.
+- Let Firebase auth state changes drive logout sync across tabs.
+- Keep user profile data in the `users` collection through `UserRepository`.
+- Use trimmed validation for all auth inputs and validate the confirm-password field on signup.
+
 ### Theme
 
 - Change palette values only in `lib/core/theme/app_colors.dart`.
@@ -119,6 +150,8 @@ lib/
 
 - Use `AppScaffold` and `AppAppBar` for page shells.
 - Use `AppTextField`, `AppDropdown`, and `AppDatePickerField` for themed form controls.
+- Use `AppAnimatedEntry` when forms or sections need staggered entrance animation.
+- Use `AppValidators` for trimmed and reusable field validation.
 - Use `NoInternetView` when a page or scaffold needs an offline state.
 
 ### Internet / Offline
@@ -150,7 +183,9 @@ Keep feature logic inside that module. Shared logic belongs in `core` or `common
 
 - The app starts from `lib/main.dart`.
 - Firebase initializes on web.
+- Firebase Auth persistence is set to `LOCAL` on web so tabs share login state.
 - The root app uses `MaterialApp.router` with `go_router`.
+- Auth routes redirect to login, signup, or home based on the current Firebase auth state.
 - The home route creates a fresh cubit and loads fresh module data on entry.
 - The test suite includes a smoke test for the app shell.
 

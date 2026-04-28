@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../app_text/app_text.dart';
+import '../widgets/app_theme_toggle_button.dart';
 
 class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
   const AppAppBar({
@@ -26,7 +27,10 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: elevation,
       centerTitle: centerTitle,
       leading: leading,
-      actions: actions,
+      actions: [
+        if (actions != null) ...actions!,
+        const AppThemeToggleButton(),
+      ],
       title: Text(
         title,
         style: AppText.titleMedium(color: colorScheme.onSurface),
