@@ -1,229 +1,171 @@
 # Repeater Manager
 
-A Flutter multi-platform application for managing repeaters. This project demonstrates modern Flutter development practices with support for Android, iOS, Web, and Windows platforms from a single codebase.
+Web-first Flutter foundation for Firebase-backed module development.
 
-**Status:** Active Development | **License:** MIT
+## What Is Set Up
 
-## Supported Platforms
+This project is now structured for:
 
-| Platform | Status | Notes |
-|----------|--------|-------|
-| Android  | ✓ Ready | Supports API 21+ |
-| iOS      | ✓ Ready | Supports iOS 11.0+ |
-| Web      | ✓ Ready | Chrome, Firefox, Safari |
-| Windows  | ✓ Ready | Windows 10+ |
+- Firestore-based CRUD and query access through a shared base repository.
+- Bloc/Cubit state management with `equatable` states and `copyWith` updates.
+- Centralized theme, color tokens, and text styles so visual changes happen in one place.
+- Responsive layouts for mobile, tablet, and desktop/web through a shared `LayoutBuilder` wrapper.
+- `go_router` as the direct routing layer with centralized route constants.
+- Common scaffold, app bar, text field, dropdown, and date picker widgets.
+- Internet/offline handling at the app scaffold level for web use.
+- Module-based structure so future features stay isolated and predictable.
 
-## Getting Started
+## Setup
 
-### Prerequisites
-
-- **Flutter SDK** 3.0.0 or later ([Download](https://flutter.dev/docs/get-started/install))
-- **Git** 2.0+ ([Download](https://git-scm.com/downloads))
-- **Chrome** (for web development)
-- Platform-specific requirements:
-  - **Android:** Android SDK 21+ (API Level 21+)
-  - **iOS:** macOS 10.15+, Xcode 12.0+
-  - **Windows:** Visual Studio 2019+ with C++ workload
-
-### Quick Start
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Kevall18/repeater_manager.git
-   cd repeater_manager
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   flutter pub get
-   ```
-
-3. **Run the app:**
-   ```bash
-   # For Web (Chrome)
-   flutter run -d chrome
-   
-   # For Android emulator
-   flutter run -d android
-   
-   # For iOS simulator (macOS only)
-   flutter run -d ios
-   
-   # For Windows
-   flutter run -d windows
-   ```
-
-### Platform-Specific Setup
-
-#### Android
 ```bash
-# Ensure Android SDK is installed
-flutter doctor -v
-
-# Run with verbose output to debug any issues
-flutter run -d android -v
-```
-
-#### iOS (macOS only)
-```bash
-cd ios
-pod install
-cd ..
-flutter run -d ios
-```
-
-#### Web
-```bash
-# Run with Chrome debug
+flutter pub get
+flutter analyze
+flutter test
 flutter run -d chrome
-
-# Build for release
-flutter build web --release
 ```
 
-#### Windows
-```bash
-# Ensure Visual C++ redistributable is installed
-flutter run -d windows
-```
-
-## Features
-
-- ✓ Counter app with Flutter Material Design
-- ✓ Cross-platform support (Android, iOS, Web, Windows)
-- ✓ Responsive UI with Material Design 3
-- ✓ Hot reload for rapid development
-- ✓ Comprehensive test coverage
-- ✓ CI/CD ready
+Firebase is initialized for web in `lib/main.dart` using `lib/firebase_options.dart`.
 
 ## Project Structure
 
+```text
+lib/
+├── app/
+│   ├── app.dart
+│   ├── app_router.dart
+│   ├── app_routes.dart
+│   └── app_theme.dart
+├── commons/
+│   ├── app_bar/
+│   │   └── app_app_bar.dart
+│   ├── app_scaffold/
+│   │   └── app_scaffold.dart
+│   ├── app_text/
+│   │   └── app_text.dart
+│   ├── network/
+│   │   └── no_internet_view.dart
+│   ├── responsive/
+│   │   └── app_responsive_page.dart
+│   └── widgets/
+│       ├── app_date_picker_field.dart
+│       ├── app_dropdown.dart
+│       └── app_text_field.dart
+├── core/
+│   ├── constants/
+│   │   └── app_breakpoints.dart
+│   ├── cubits/
+│   │   ├── connectivity_cubit.dart
+│   │   └── connectivity_state.dart
+│   ├── extensions/
+│   │   └── build_context_extensions.dart
+│   ├── services/
+│   │   ├── base_firestore_repository.dart
+│   │   └── connectivity_service.dart
+│   └── theme/
+│       ├── app_colors.dart
+│       └── app_theme_colors.dart
+└── modules/
+    └── home/
+        ├── bloc/
+        │   ├── home_cubit.dart
+        │   └── home_state.dart
+        ├── repository/
+        │   └── home_repository.dart
+        ├── screen/
+        │   └── home_screen.dart
+        └── widgets/
+            └── home_summary_card.dart
 ```
-repeater_manager/
-├── lib/                          # Dart source code
-│   └── main.dart               # Application entry point
-├── android/                      # Android platform configuration
-│   ├── app/                     # Android app module
-│   └── gradle.properties        # Android build configuration
-├── ios/                          # iOS platform configuration
-│   ├── Runner/                  # iOS app project
-│   └── Podfile                  # CocoaPods dependencies
-├── web/                          # Web platform configuration
-│   ├── index.html               # HTML entry point
-│   └── manifest.json            # PWA manifest
-├── windows/                      # Windows platform configuration
-│   ├── runner/                  # Win32 runner
-│   └── CMakeLists.txt           # Build configuration
-├── test/                         # Unit and widget tests
-├── pubspec.yaml                  # Project dependencies
-└── README.md                      # This file
+
+## Architecture Rules
+
+### Routing
+
+- Use `lib/app/app_router.dart` as the only routing entry point.
+- Keep route names and paths in `lib/app/app_routes.dart`.
+- Pages should not depend on route arguments for core data when a fresh fetch is possible.
+- If routing is replaced later, screens should not need to change.
+
+### State Management
+
+- Use `Cubit` for simple view state and `Bloc` when the state machine becomes more complex.
+- Keep states immutable.
+- Extend `Equatable` for all bloc and cubit states.
+- Expose updates through `copyWith` methods.
+- Route entry points should create their cubit and trigger fresh loading on entry.
+
+### Firebase / Firestore
+
+- Use `BaseFirestoreRepository<T>` in `lib/core/services/base_firestore_repository.dart` for common Firestore work.
+- Build feature repositories on top of that base class.
+- Keep Firestore access inside repositories, not in screens.
+- Avoid passing Firestore data between pages as navigation payloads when the page can reload itself.
+
+### Theme
+
+- Change palette values only in `lib/core/theme/app_colors.dart`.
+- Change shared text styles only in `lib/commons/app_text/app_text.dart`.
+- Theme extensions live in `lib/core/theme/app_theme_colors.dart`.
+- `lib/app/app_theme.dart` is the place to wire Material theme output.
+
+### Responsive UI
+
+- Use `AppResponsivePage` for all page-level layouts.
+- Supply mobile, tablet, and desktop builders instead of hand-rolling breakpoint logic in every screen.
+- Prefer the common scaffold and responsive wrapper together to avoid overflow issues.
+- Use the context breakpoint extensions in `lib/core/extensions/build_context_extensions.dart` when needed.
+
+### Common Widgets
+
+- Use `AppScaffold` and `AppAppBar` for page shells.
+- Use `AppTextField`, `AppDropdown`, and `AppDatePickerField` for themed form controls.
+- Use `NoInternetView` when a page or scaffold needs an offline state.
+
+### Internet / Offline
+
+- `ConnectivityCubit` handles connection state for the app.
+- `AppScaffold` switches to an offline widget when the app is not connected.
+- Web pages should always be able to reload and fetch fresh data when they re-enter the route.
+
+## Feature Pattern
+
+When adding a new module, use this shape:
+
+```text
+lib/modules/<feature>/
+├── bloc/
+│   ├── <feature>_bloc.dart or <feature>_cubit.dart
+│   └── <feature>_state.dart
+├── repository/
+│   └── <feature>_repository.dart
+├── screen/
+│   └── <feature>_screen.dart
+└── widgets/
+    └── ...feature-specific widgets...
 ```
 
-## Development
+Keep feature logic inside that module. Shared logic belongs in `core` or `commons`.
 
-### Code Style
+## Current Behavior
 
-This project follows [Dart Style Guide](https://dart.dev/guides/language/effective-dart/style).
+- The app starts from `lib/main.dart`.
+- Firebase initializes on web.
+- The root app uses `MaterialApp.router` with `go_router`.
+- The home route creates a fresh cubit and loads fresh module data on entry.
+- The test suite includes a smoke test for the app shell.
 
-Run formatter:
-```bash
-dart format lib/ test/ --line-length 80
-```
-
-### Linting
+## Verification
 
 ```bash
 flutter analyze
-```
-
-### Testing
-
-```bash
-# Run all tests
 flutter test
-
-# Run with coverage
-flutter test --coverage
+flutter run -d chrome
 ```
 
-## Troubleshooting
+## Notes For Future Work
 
-### Build Issues
-
-**Error: "Could not find the latest version of the Android SDK"**
-```bash
-flutter config --android-sdk=/path/to/android/sdk
-```
-
-**Error: "Gradle build failed"**
-```bash
-cd android
-./gradlew clean
-cd ..
-flutter pub get
-flutter run -d android
-```
-
-**Error: "iOS Pod install failed"**
-```bash
-cd ios
-rm -rf Pods Pod.lock
-pod install --repo-update
-cd ..
-```
-
-### Runtime Issues
-
-**App crashes on startup:**
-1. Check `flutter doctor` for missing dependencies
-2. Run `flutter clean` and rebuild
-3. Verify all platform SDKs are installed
-
-**Hot reload not working:**
-- Try hot restart: Press `R` in the terminal
-- Or stop and restart the app
-
-## Contributing
-
-Contributions are welcome! Please follow this workflow:
-
-1. Create a feature branch:
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-
-2. Make your changes and test thoroughly:
-   ```bash
-   flutter test
-   flutter analyze
-   ```
-
-3. Commit with clear messages:
-   ```bash
-   git commit -m "feat: add new feature"
-   ```
-
-4. Push to your branch:
-   ```bash
-   git push -u origin feature/your-feature-name
-   ```
-
-5. Open a Pull Request on GitHub
-6. Address review comments
-7. Once approved, your code will be merged to main
-
-**Note:** The `main` branch is protected and requires pull requests for all changes.
-
-## Performance Optimization
-
-- Use `flutter build` with `--release` flag for production
-- Monitor performance with DevTools:
-  ```bash
-  flutter pub global activate devtools
-  devtools
-  ```
-- Profile with Android Studio or VS Code Flutter extensions
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- Keep the palette centralized.
+- Keep screen state inside bloc/cubit layers.
+- Keep Firestore access in repositories.
+- Keep responsive decisions in `AppResponsivePage` or shared extensions.
+- Keep route definitions centralized in `lib/app`.
