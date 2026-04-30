@@ -31,16 +31,28 @@ class AppRouter {
         final isOnAuthRoute = state.matchedLocation == AppRoutes.login ||
             state.matchedLocation == AppRoutes.signup;
 
-        if (StartupSplashGate.shouldShowSplash) {
-          return state.matchedLocation == AppRoutes.splash
-              ? null
-              : AppRoutes.splash;
+        // Only show splash on initial app load, never again after marked
+        if (state.matchedLocation == AppRoutes.splash) {
+          // If we're already on splash, check if we should proceed
+          if (!StartupSplashGate.shouldShowSplash) {
+            // Splash has been marked as completed, proceed with auth check
+            if (authState.status == AuthStatus.unauthenticated) {
+              return AppRoutes.login;
+            } else if (authState.status == AuthStatus.authenticated) {
+              return AppRoutes.home;
+            } else if (authState.status == AuthStatus.initializing) {
+              // Still initializing, stay on splash until ready
+              return null;
+            }
+          }
+          // Stay on splash
+          return null;
         }
 
-        if (authState.status == AuthStatus.initializing) {
-          return state.matchedLocation == AppRoutes.splash
-              ? null
-              : AppRoutes.splash;
+        // If splash should be shown and we're not on it, go there
+        if (StartupSplashGate.shouldShowSplash &&
+            authState.status == AuthStatus.initializing) {
+          return AppRoutes.splash;
         }
 
         if (authState.status == AuthStatus.unauthenticated) {

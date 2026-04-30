@@ -8,6 +8,7 @@ import 'app_routes.dart';
 import 'startup_splash_gate.dart';
 import '../modules/auth/bloc/auth_cubit.dart';
 import '../modules/auth/bloc/auth_state.dart';
+import '../core/theme/app_colors.dart';
 
 class LoadingSplashScreen extends StatefulWidget {
   const LoadingSplashScreen({super.key});
@@ -90,60 +91,67 @@ class LoadingSplashScreenState extends State<LoadingSplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
-    final letterColor = Theme.of(context).colorScheme.tertiary;
+    // Always use dark theme colors for splash
+    return Theme(
+      data: Theme.of(context).copyWith(
+        scaffoldBackgroundColor: AppColors.backgroundDark,
+        colorScheme: Theme.of(context).colorScheme.copyWith(
+              tertiary: AppColors.primaryLight,
+            ),
+      ),
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundDark,
+        body: Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: 36,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return Stack(
+                  clipBehavior: Clip.none,
+                  children: List.generate(_letters.length, (index) {
+                    final controller = _controllers[index];
 
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      body: Center(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.8,
-          height: 36,
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return Stack(
-                clipBehavior: Clip.none,
-                children: List.generate(_letters.length, (index) {
-                  final controller = _controllers[index];
+                    return AnimatedBuilder(
+                      animation: controller,
+                      builder: (context, child) {
+                        final double leftFraction =
+                            _leftTween.evaluate(controller);
+                        final double opacity =
+                            _opacityTween.evaluate(controller);
+                        final double rotation =
+                            _rotationTween.evaluate(controller);
 
-                  return AnimatedBuilder(
-                    animation: controller,
-                    builder: (context, child) {
-                      final double leftFraction =
-                          _leftTween.evaluate(controller);
-                      final double opacity = _opacityTween.evaluate(controller);
-                      final double rotation =
-                          _rotationTween.evaluate(controller);
-
-                      return Positioned(
-                        top: 0,
-                        left: leftFraction * constraints.maxWidth,
-                        child: Transform.rotate(
-                          angle: rotation,
-                          child: Opacity(
-                            opacity: opacity,
-                            child: Container(
-                              width: 20,
-                              height: 36,
-                              alignment: Alignment.center,
-                              child: Text(
-                                _letters[index],
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: letterColor,
-                                  fontFamily: 'Verdana',
-                                  fontWeight: FontWeight.bold,
+                        return Positioned(
+                          top: 0,
+                          left: leftFraction * constraints.maxWidth,
+                          child: Transform.rotate(
+                            angle: rotation,
+                            child: Opacity(
+                              opacity: opacity,
+                              child: Container(
+                                width: 20,
+                                height: 36,
+                                alignment: Alignment.center,
+                                child: Text(
+                                  _letters[index],
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: AppColors.primaryLight,
+                                    fontFamily: 'Verdana',
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  );
-                }),
-              );
-            },
+                        );
+                      },
+                    );
+                  }),
+                );
+              },
+            ),
           ),
         ),
       ),
