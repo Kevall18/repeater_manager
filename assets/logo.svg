@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Upleta Municipal Arts and Commerce College logo">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#7a0000" flood-opacity="0.35"/>
+    </filter>
+    <linearGradient id="gold" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#ffe77d"/>
+      <stop offset="55%" stop-color="#f5c84c"/>
+      <stop offset="100%" stop-color="#c99100"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" fill="transparent"/>
+
+  <g filter="url(#shadow)" fill="#d8231f" stroke="#ffffff" stroke-width="10" stroke-linejoin="round">
+    <path d="M106 162c0-66 57-118 128-118h44c71 0 128 52 128 118v18c0 31-10 58-29 79 33 14 57 45 57 82 0 49-41 89-92 89h-23c-23 0-45-9-61-24-16 15-38 24-61 24h-23c-51 0-92-40-92-89 0-37 24-68 57-82-19-21-29-48-29-79z"/>
+    <path d="M70 196c-18 10-29 25-34 43-7 27 8 49 31 71 20 19 28 34 27 54-1 18-9 32-22 46-14 15-17 36-7 54 11 20 34 32 59 32h6c-10-18-18-41-18-67 0-57 33-99 79-120-48-11-87-40-121-113z"/>
+    <path d="M442 196c18 10 29 25 34 43 7 27-8 49-31 71-20 19-28 34-27 54 1 18 9 32 22 46 14 15 17 36 7 54-11 20-34 32-59 32h-6c10-18 18-41 18-67 0-57-33-99-79-120 48-11 87-40 121-113z"/>
+    <path d="M191 280h130l24 94c-38 22-75 33-89 33s-51-11-89-33z" fill="#ffffff" stroke="#ffffff"/>
+    <path d="M220 170h72l25 26-61 16-61-16z" fill="#ffffff" stroke="#ffffff"/>
+  </g>
+
+  <g fill="#d8231f" stroke="#ffffff" stroke-width="8" stroke-linejoin="round">
+    <path d="M126 95c35-28 82-43 130-43s95 15 130 43l-13 17c-31-25-72-38-117-38s-86 13-117 38z"/>
+    <path d="M178 127l54 38-40 7-34-33z"/>
+    <path d="M334 127l-54 38 40 7 34-33z"/>
+    <path d="M207 188h98l14 27H193z" fill="#ffffff" stroke="#ffffff"/>
+  </g>
+
+  <ellipse cx="256" cy="224" rx="88" ry="74" fill="#ffffff" stroke="#ffffff" stroke-width="10"/>
+  <path d="M218 232h76v18h-76zM236 250h40v14h-40z" fill="#d8231f"/>
+  <path d="M224 212c18-24 46-36 84-36-18 12-26 28-28 47-20-4-38-4-56-11z" fill="#d8231f" opacity="0.16"/>
+
+  <text x="256" y="98" text-anchor="middle" font-family="Noto Sans Gujarati, Mukta, Arial, sans-serif" font-size="33" font-weight="700" fill="#1654d1">ઉપલેટા</text>
+  <text x="256" y="360" text-anchor="middle" font-family="Noto Sans Gujarati, Mukta, Arial, sans-serif" font-size="46" font-weight="900" fill="url(#gold)" stroke="#1b1b1b" stroke-width="6" paint-order="stroke fill">મ્યુનિસિપલ આર્ટ્સ</text>
+  <text x="256" y="405" text-anchor="middle" font-family="Noto Sans Gujarati, Mukta, Arial, sans-serif" font-size="28" font-weight="700" fill="#1654d1">તથા</text>
+  <text x="256" y="440" text-anchor="middle" font-family="Noto Sans Gujarati, Mukta, Arial, sans-serif" font-size="30" font-weight="900" fill="url(#gold)" stroke="#1b1b1b" stroke-width="5" paint-order="stroke fill">કોમર્સ કોલેજ</text>
+
+  <text x="256" y="40" text-anchor="middle" font-family="Noto Sans Gujarati, Mukta, Arial, sans-serif" font-size="20" font-weight="700" fill="#1654d1">શિક્ષા એજ ધન છે</text>
+</svg>
