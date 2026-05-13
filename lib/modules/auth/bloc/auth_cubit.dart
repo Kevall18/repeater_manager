@@ -164,6 +164,7 @@ class AuthCubit extends Cubit<AuthState> {
             name: trimmedName,
             createdAt: now,
             updatedAt: now,
+            password: trimmedPassword,
           ),
         );
       }

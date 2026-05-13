@@ -8,7 +8,7 @@ class AppUser {
     required this.createdAt,
     required this.updatedAt,
   });
-
+    this.password,
   final String uid;
   final String email;
   final String name;
@@ -16,6 +16,7 @@ class AppUser {
   final DateTime updatedAt;
 
   factory AppUser.fromMap(Map<String, dynamic> map, String id) {
+  final String? password;
     final createdAt = map['createdAt'];
     final updatedAt = map['updatedAt'];
 
@@ -29,15 +30,17 @@ class AppUser {
       updatedAt: updatedAt is Timestamp
           ? updatedAt.toDate()
           : DateTime.parse(updatedAt as String),
+        password: (map['password'] as String?),
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'email': email.trim(),
-      'name': name.trim(),
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
+    'email': email.trim(),
+    'name': name.trim(),
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': Timestamp.fromDate(updatedAt),
+    if (password != null) 'password': password,
     };
   }
 
@@ -46,13 +49,15 @@ class AppUser {
     String? name,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) {
+    String? password,
+    }) {
     return AppUser(
       uid: uid,
       email: email ?? this.email,
       name: name ?? this.name,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      password: password ?? this.password,
     );
   }
 }
