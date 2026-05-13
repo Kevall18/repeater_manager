@@ -47,91 +47,93 @@ class _SignUpScreenState extends State<SignUpScreen> {
           autovalidateMode: _autoValidate
               ? AutovalidateMode.always
               : AutovalidateMode.disabled,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const AuthPageHeader(
-                title: 'Create account',
-                subtitle: 'Fill in the details below to register.',
-              ),
-              const SizedBox(height: 24),
-              AuthTextField(
-                index: 0,
-                controller: _nameController,
-                label: 'Name',
-                hint: 'Enter your full name',
-                textInputAction: TextInputAction.next,
-                prefixIcon: Icons.person_outline,
-                validator: (value) =>
-                    AppValidators.requiredTrimmed(value, fieldName: 'Name'),
-              ),
-              const SizedBox(height: 16),
-              AuthTextField(
-                index: 1,
-                controller: _emailController,
-                label: 'Email',
-                hint: 'Enter your email',
-                textInputAction: TextInputAction.next,
-                prefixIcon: Icons.email_outlined,
-                validator: AppValidators.email,
-              ),
-              const SizedBox(height: 16),
-              AuthTextField(
-                index: 2,
-                controller: _passwordController,
-                label: 'Password',
-                hint: 'Create a password',
-                isPassword: true,
-                textInputAction: TextInputAction.next,
-                prefixIcon: Icons.lock_outline,
-                validator: AppValidators.password,
-              ),
-              const SizedBox(height: 16),
-              AuthTextField(
-                index: 3,
-                controller: _confirmPasswordController,
-                label: 'Confirm password',
-                hint: 'Re-enter your password',
-                isPassword: true,
-                textInputAction: TextInputAction.done,
-                prefixIcon: Icons.lock_reset_outlined,
-                validator: (value) => AppValidators.confirmPassword(
-                  value,
-                  _passwordController.text,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const AuthPageHeader(
+                  title: 'Create account',
+                  subtitle: 'Fill in the details below to register.',
                 ),
-                onSubmitted: (_) => _submit(),
-              ),
-              const SizedBox(height: 24),
-              BlocConsumer<AuthCubit, AuthState>(
-                listener: (context, state) {
-                  if (state.message.isNotEmpty &&
-                      state.status == AuthStatus.error) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.message)),
+                const SizedBox(height: 24),
+                AuthTextField(
+                  index: 0,
+                  controller: _nameController,
+                  label: 'Name',
+                  hint: 'Enter your full name',
+                  textInputAction: TextInputAction.next,
+                  prefixIcon: Icons.person_outline,
+                  validator: (value) =>
+                      AppValidators.requiredTrimmed(value, fieldName: 'Name'),
+                ),
+                const SizedBox(height: 16),
+                AuthTextField(
+                  index: 1,
+                  controller: _emailController,
+                  label: 'Email',
+                  hint: 'Enter your email',
+                  textInputAction: TextInputAction.next,
+                  prefixIcon: Icons.email_outlined,
+                  validator: AppValidators.email,
+                ),
+                const SizedBox(height: 16),
+                AuthTextField(
+                  index: 2,
+                  controller: _passwordController,
+                  label: 'Password',
+                  hint: 'Create a password',
+                  isPassword: true,
+                  textInputAction: TextInputAction.next,
+                  prefixIcon: Icons.lock_outline,
+                  validator: AppValidators.password,
+                ),
+                const SizedBox(height: 16),
+                AuthTextField(
+                  index: 3,
+                  controller: _confirmPasswordController,
+                  label: 'Confirm password',
+                  hint: 'Re-enter your password',
+                  isPassword: true,
+                  textInputAction: TextInputAction.done,
+                  prefixIcon: Icons.lock_reset_outlined,
+                  validator: (value) => AppValidators.confirmPassword(
+                    value,
+                    _passwordController.text,
+                  ),
+                  onSubmitted: (_) => _submit(),
+                ),
+                const SizedBox(height: 24),
+                BlocConsumer<AuthCubit, AuthState>(
+                  listener: (context, state) {
+                    if (state.message.isNotEmpty &&
+                        state.status == AuthStatus.error) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(state.message)),
+                      );
+                    }
+                  },
+                  builder: (context, state) {
+                    return AppAnimatedEntry(
+                      delay: const Duration(milliseconds: 380),
+                      child: AppLoadingButton(
+                        label: 'Sign Up',
+                        isLoading: state.status == AuthStatus.loading,
+                        onPressed: _submit,
+                      ),
                     );
-                  }
-                },
-                builder: (context, state) {
-                  return AppAnimatedEntry(
-                    delay: const Duration(milliseconds: 380),
-                    child: AppLoadingButton(
-                      label: 'Sign Up',
-                      isLoading: state.status == AuthStatus.loading,
-                      onPressed: _submit,
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 16),
-              AppAnimatedEntry(
-                delay: const Duration(milliseconds: 460),
-                child: TextButton(
-                  onPressed: () => context.go(AppRoutes.login),
-                  child: const Text('Back to login'),
+                  },
                 ),
-              ),
-            ],
+                const SizedBox(height: 16),
+                AppAnimatedEntry(
+                  delay: const Duration(milliseconds: 460),
+                  child: TextButton(
+                    onPressed: () => context.go(AppRoutes.login),
+                    child: const Text('Back to login'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

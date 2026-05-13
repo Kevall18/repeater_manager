@@ -14,6 +14,9 @@ import '../modules/auth/screen/signup_screen.dart';
 import '../modules/home/bloc/home_cubit.dart';
 import '../modules/home/repository/home_repository.dart';
 import '../modules/home/screen/home_screen.dart';
+import '../modules/receipts/screen/receipt_list_screen.dart';
+import '../modules/receipts/screen/receipt_form_screen.dart';
+import '../modules/receipts/screen/day_statement_screen.dart';
 import 'app_routes.dart';
 
 class AppRouter {
@@ -85,6 +88,30 @@ class AppRouter {
               create: (_) => HomeCubit(repository: homeRepository)..load(),
               child: const HomeScreen(),
             );
+          },
+        ),
+        GoRoute(
+          path: AppRoutes.receipts,
+          name: AppRoutes.receiptsName,
+          builder: (context, state) {
+            final uid = authCubit.state.user?.uid ?? '';
+            return ReceiptListScreen(userId: uid);
+          },
+        ),
+        GoRoute(
+          path: AppRoutes.receiptCreate,
+          name: AppRoutes.receiptCreateName,
+          builder: (context, state) {
+            final uid = authCubit.state.user?.uid ?? '';
+            return ReceiptFormScreen(userId: uid);
+          },
+        ),
+        GoRoute(
+          path: AppRoutes.receiptsDay,
+          name: AppRoutes.receiptsDayName,
+          builder: (context, state) {
+            final uid = authCubit.state.user?.uid ?? '';
+            return DayStatementScreen(userId: uid);
           },
         ),
         GoRoute(

@@ -1,1 +1,17 @@
-{"flutter":{"platforms":{"dart":{"lib/firebase_options.dart":{"projectId":"repeater-manager","configurations":{"web":"1:260511189056:web:39d504b8ba2b203d8bb7a5"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "repeater-manager",
+          "configurations": {
+            "web": "1:260511189056:web:39d504b8ba2b203d8bb7a5"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "indexes": "firestore.indexes.json"
+  }
+}

@@ -43,66 +43,68 @@ class _LoginScreenState extends State<LoginScreen> {
           autovalidateMode: _autoValidate
               ? AutovalidateMode.always
               : AutovalidateMode.disabled,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const AuthPageHeader(
-                title: 'Welcome back',
-                subtitle: 'Sign in to continue with your account.',
-              ),
-              const SizedBox(height: 24),
-              AuthTextField(
-                index: 0,
-                controller: _emailController,
-                label: 'Email',
-                hint: 'Enter your email',
-                textInputAction: TextInputAction.next,
-                prefixIcon: Icons.email_outlined,
-                validator: AppValidators.email,
-              ),
-              const SizedBox(height: 16),
-              AuthTextField(
-                index: 1,
-                controller: _passwordController,
-                label: 'Password',
-                hint: 'Enter your password',
-                isPassword: true,
-                textInputAction: TextInputAction.done,
-                prefixIcon: Icons.lock_outline,
-                validator: AppValidators.password,
-                onSubmitted: (_) => _submit(),
-              ),
-              const SizedBox(height: 24),
-              BlocConsumer<AuthCubit, AuthState>(
-                listener: (context, state) {
-                  if (state.message.isNotEmpty &&
-                      state.status == AuthStatus.error) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.message)),
-                    );
-                  }
-                },
-                builder: (context, state) {
-                  return AppAnimatedEntry(
-                    delay: const Duration(milliseconds: 260),
-                    child: AppLoadingButton(
-                      label: 'Login',
-                      isLoading: state.status == AuthStatus.loading,
-                      onPressed: _submit,
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 16),
-              AppAnimatedEntry(
-                delay: const Duration(milliseconds: 340),
-                child: TextButton(
-                  onPressed: () => context.go(AppRoutes.signup),
-                  child: const Text('Create a new account'),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const AuthPageHeader(
+                  title: 'Welcome back',
+                  subtitle: 'Sign in to continue with your account.',
                 ),
-              ),
-            ],
+                const SizedBox(height: 24),
+                AuthTextField(
+                  index: 0,
+                  controller: _emailController,
+                  label: 'Email',
+                  hint: 'Enter your email',
+                  textInputAction: TextInputAction.next,
+                  prefixIcon: Icons.email_outlined,
+                  validator: AppValidators.email,
+                ),
+                const SizedBox(height: 16),
+                AuthTextField(
+                  index: 1,
+                  controller: _passwordController,
+                  label: 'Password',
+                  hint: 'Enter your password',
+                  isPassword: true,
+                  textInputAction: TextInputAction.done,
+                  prefixIcon: Icons.lock_outline,
+                  validator: AppValidators.password,
+                  onSubmitted: (_) => _submit(),
+                ),
+                const SizedBox(height: 24),
+                BlocConsumer<AuthCubit, AuthState>(
+                  listener: (context, state) {
+                    if (state.message.isNotEmpty &&
+                        state.status == AuthStatus.error) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(state.message)),
+                      );
+                    }
+                  },
+                  builder: (context, state) {
+                    return AppAnimatedEntry(
+                      delay: const Duration(milliseconds: 260),
+                      child: AppLoadingButton(
+                        label: 'Login',
+                        isLoading: state.status == AuthStatus.loading,
+                        onPressed: _submit,
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 16),
+                AppAnimatedEntry(
+                  delay: const Duration(milliseconds: 340),
+                  child: TextButton(
+                    onPressed: () => context.go(AppRoutes.signup),
+                    child: const Text('Create a new account'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
