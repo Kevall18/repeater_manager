@@ -28,6 +28,17 @@ flutter run -d chrome
 
 Firebase is initialized for web in `lib/main.dart` using `lib/firebase_options.dart`.
 
+## Firebase Hosting
+
+The app is configured for Firebase Hosting as a Flutter web SPA.
+
+```bash
+flutter build web --release
+firebase deploy --only hosting
+```
+
+The Hosting config serves `build/web` and rewrites all routes to `index.html` so `go_router` works on refresh and direct links.
+
 ## Project Structure
 
 ```text
