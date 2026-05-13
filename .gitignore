@@ -91,3 +91,6 @@ coverage/
 # Environment variables
 .env
 .env.*
+
+# Firebase CLI cache
+.firebase/
