@@ -27,8 +27,7 @@ class _ReceiptListScreenState extends State<ReceiptListScreen> {
     if (query.trim().isEmpty) return list;
     final lowerQuery = query.toLowerCase().trim();
     return list
-        .where((r) =>
-            r.studentName.toLowerCase().contains(lowerQuery))
+        .where((r) => r.studentName.toLowerCase().contains(lowerQuery))
         .toList();
   }
 

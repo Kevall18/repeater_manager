@@ -25,17 +25,13 @@ class _DepartmentStatementScreenState extends State<DepartmentStatementScreen> {
   String? _year = ReceiptFormScreen.generateYearOptions().first;
 
   Future<List<Receipt>> _load() => _repo.fetchByFilters(
-      userId: widget.userId, 
-      year: _year, 
-      department: _department, 
-      sem: _sem);
+      userId: widget.userId, year: _year, department: _department, sem: _sem);
 
   List<Receipt> _filterByName(List<Receipt> list, String query) {
     if (query.trim().isEmpty) return list;
     final lowerQuery = query.toLowerCase().trim();
     return list
-        .where((r) =>
-            r.studentName.toLowerCase().contains(lowerQuery))
+        .where((r) => r.studentName.toLowerCase().contains(lowerQuery))
         .toList();
   }
 
